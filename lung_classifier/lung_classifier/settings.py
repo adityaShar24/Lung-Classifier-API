@@ -18,7 +18,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Define the path to your data folder
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 
-
 LUNG_N_DIR = os.path.join(DATA_DIR, 'lung_n')
 LUNG_ACA_DIR = os.path.join(DATA_DIR, 'lung_aca')
 LUNG_SCC_DIR = os.path.join(DATA_DIR, 'lung_scc')
