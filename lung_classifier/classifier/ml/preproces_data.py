@@ -1,19 +1,22 @@
+# classifier/ml/preprocess.py
+import os
 import cv2
 import numpy as np
-from glob import glob
 
-IMG_SIZE = 128
+def preprocess_images(path, classes):
+    images = []
+    labels = []
 
-def preprocess_image(path, classes):
-    X = []
-    Y = []
+    for label in classes:
+        class_dir = os.path.join(path, label)
+        for img_file in os.listdir(class_dir):
+            img_path = os.path.join(class_dir, img_file)
+            img = cv2.imread(img_path)
+            img = cv2.resize(img, (128, 128))  
+            images.append(img)
+            labels.append(label)
+
+    X = np.array(images) / 255.0 
+    Y = np.array(labels)
     
-    for i , cat in enumerate(classes):
-        images = glob(f'{path}/{cat}/*.jpeg')
-
-        for image in images:
-            img = cv2.imread(image)
-            X.append(cv2.resize(img, (IMG_SIZE, IMG_SIZE)))
-            Y.append(i)
-
-    return np.array(X), np.array(Y)
+    return X, Y
