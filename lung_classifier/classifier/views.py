@@ -9,7 +9,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework import status
 
-ML_MODEL_PATH = settings.model_path
+ML_MODEL_PATH = settings.MODEL_PATH
 
 model = load_model(ML_MODEL_PATH)
 
@@ -48,7 +48,8 @@ class LungCancerClassifierView(APIView):
 
     def _make_prediction(self, img_array):
         """Runs the model prediction and returns the class label."""
-        classes = ['lung_n', 'lung_aca', 'lung_scc']  # Define your classes
+        classes = ['lung_aca', 'lung_n', 'lung_scc']  # Define your classes
         prediction = model.predict(img_array)
+        print(prediction, np.argmax(prediction))
         predicted_class = classes[np.argmax(prediction)]
         return predicted_class
