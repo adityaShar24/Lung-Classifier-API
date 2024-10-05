@@ -18,6 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Define the path to your data folder
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 
+model_path = os.path.join(BASE_DIR , 'classifier' , 'ml' , 'lung_classifier_model.h5')
+
 LUNG_N_DIR = os.path.join(DATA_DIR, 'lung_n')
 LUNG_ACA_DIR = os.path.join(DATA_DIR, 'lung_aca')
 LUNG_SCC_DIR = os.path.join(DATA_DIR, 'lung_scc')
@@ -47,6 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'classifier',
 ]
 
 MIDDLEWARE = [
