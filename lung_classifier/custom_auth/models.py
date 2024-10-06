@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-
+from .enums import GenderEnum , RoleEnum
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -34,8 +34,8 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     date_of_birth = models.DateField(null=True , blank=True)
-    gender = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], null=True, blank=True)
-    role = models.CharField(max_length=10)
+    gender = models.CharField(max_length=10, choices=GenderEnum.choices(), null=True, blank=True)
+    role = models.CharField(max_length=10, choices=RoleEnum.choices())
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name' , 'last_name']
 
