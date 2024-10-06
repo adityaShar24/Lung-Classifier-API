@@ -44,7 +44,8 @@ class UserLoginSerializer(Serializer):
 
     def to_representation(self, instance):
         """Customize the representation of the validated user data."""
+        
         return {
             'email': instance['user'].email,
-            'role': instance['user'].role  # Include role in the response
+            'role': instance['user'].role,
         }
