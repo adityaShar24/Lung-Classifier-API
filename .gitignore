@@ -22,3 +22,6 @@ rad.json
 TestResults.xml
 
 *data/
+
+*local_settings.py
+    

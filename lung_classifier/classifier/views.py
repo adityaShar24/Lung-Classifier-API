@@ -52,4 +52,12 @@ class LungCancerClassifierView(APIView):
         prediction = model.predict(img_array)
         print(prediction, np.argmax(prediction))
         predicted_class = classes[np.argmax(prediction)]
-        return predicted_class
+        
+        if predicted_class == classes[1]:  # Check if the predicted class is 'lung_n'
+            return {"prediction": predicted_class, "message": "The image shows normal lung tissue."}
+        elif predicted_class == classes[0]:
+            return {"prediction": predicted_class, "message": "The image shows signs of lung adenocarcinoma (lung_aca). Further examination is recommended."}
+        elif predicted_class == classes[2]:
+            return {"prediction": predicted_class, "message": "The image shows signs of lung squamous cell carcinoma (lung_scc). Further examination is recommended."}
+        else:
+            return {"prediction": predicted_class, "message": "Unrecognized result. Please consult a specialist."}
