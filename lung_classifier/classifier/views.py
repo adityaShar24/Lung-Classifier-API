@@ -5,7 +5,7 @@ from keras.models import load_model
 import numpy as np
 import cv2
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView 
+from rest_framework.generics import ListAPIView , DestroyAPIView
 from rest_framework.parsers import MultiPartParser ,FormParser
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -100,3 +100,17 @@ class GetAllClassifiedImages(ListAPIView):
         })
     
     
+class DeleteClassifiedImageView(DestroyAPIView):
+    permission_classes = [IsAuthenticated,]
+    
+    def get_queryset(self):
+        return Image.objects.filter(id= self.kwargs['pk'])
+    
+    def delete(self, request, *args, **kwargs):
+        response = super().delete(request, *args, **kwargs)
+        return Response(
+            {
+                'message': f'Image has been deleted successfully',
+                'data':response.data
+            }
+        )
