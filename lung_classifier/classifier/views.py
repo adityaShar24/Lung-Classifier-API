@@ -65,15 +65,20 @@ class LungCancerClassifierView(APIView):
         """Runs the model prediction and returns the class label."""
         classes = ['lung_aca', 'lung_n', 'lung_scc']  # Define your classes
         prediction = model.predict(img_array)
-        print(prediction, np.argmax(prediction))
-        predicted_class = classes[np.argmax(prediction)]
+        predicted_index = np.argmax(prediction)
+        print("Prediction",prediction, np.argmax(prediction))
+        predicted_class = classes[predicted_index]
+        accuracy = round(prediction[0][predicted_index] * 100, 2)
         
         if predicted_class == classes[1]:  # Check if the predicted class is 'lung_n'
-            return {"prediction": predicted_class, "message": "The image shows normal lung tissue."}
+            return {
+                "prediction": predicted_class, 
+                "message": f"The image shows normal lung tissue with accuracy of {accuracy}% "
+                }
         elif predicted_class == classes[0]:
-            return {"prediction": predicted_class, "message": "The image shows signs of lung adenocarcinoma (lung_aca). Further examination is recommended."}
+            return {"prediction": predicted_class, "message": f"The image shows signs of lung adenocarcinoma (lung_aca) with accuracy of {accuracy}% . Further examination is recommended."}
         elif predicted_class == classes[2]:
-            return {"prediction": predicted_class, "message": "The image shows signs of lung squamous cell carcinoma (lung_scc). Further examination is recommended."}
+            return {"prediction": predicted_class, "message": f"The image shows signs of lung squamous cell carcinoma (lung_scc) with accuracy of {accuracy}% . Further examination is recommended."}
         else:
             return {"prediction": predicted_class, "message": "Unrecognized result. Please consult a specialist."}
         
