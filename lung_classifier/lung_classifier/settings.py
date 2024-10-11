@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'classifier',
     'custom_auth',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -61,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'lung_classifier.urls'
@@ -68,7 +70,7 @@ ROOT_URLCONF = 'lung_classifier.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        "DIRS": [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -143,5 +145,6 @@ REST_FRAMEWORK = {
 }
 
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 from lung_classifier.local_settings import *
