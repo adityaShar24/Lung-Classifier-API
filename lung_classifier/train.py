@@ -7,10 +7,12 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import pandas as pd
 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lung_classifier.settings')
+
 def train_model():
     print("Running Script train.py")
     path = settings.DATA_DIR
-    classes = ['lung_n', 'lung_aca', 'lung_scc']
+    classes = ['lung_n', 'lung_aca', 'lung_scc', 'non-lung']
 
     X, Y = preprocess_images(path, classes)
     Y = pd.get_dummies(Y).values
@@ -20,6 +22,7 @@ def train_model():
     model = build_model()
 
     model.fit(X_train, Y_train, validation_data=(X_val, Y_val), epochs=8, batch_size=16)
-    model.save('lung_classifier_model.h5')
+    model.save('new_lung_classifier_model.h5')
 
 response = train_model()
+print(response)

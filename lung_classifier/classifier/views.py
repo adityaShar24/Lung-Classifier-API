@@ -68,7 +68,7 @@ class LungCancerClassifierView(APIView):
         os.makedirs(user_folder, exist_ok=True)
 
         predicted_class = prediction['prediction']
-        
+
         # Dummy data for graphs; replace with actual data as needed
         y_true = [0]  # Placeholder for true values
         y_pred = [0]  # Placeholder for predicted values
@@ -126,7 +126,7 @@ class LungCancerClassifierView(APIView):
 
     def _read_image(self, file_obj):
         """Converts the uploaded file to an OpenCV image and preprocesses it."""
-        image_data = np.fromstring(file_obj.read(), np.uint8)
+        image_data = np.frombuffer(file_obj.read(), np.uint8)
         img = cv2.imdecode(image_data, cv2.IMREAD_COLOR)
 
         # Resize and normalize the image for the model
@@ -139,33 +139,19 @@ class LungCancerClassifierView(APIView):
 
     def _make_prediction(self, img_array):
         """Runs the model prediction and returns the class label."""
-        classes = ['lung_aca', 'lung_n', 'lung_scc']  # Define your classes
+        classes = ['lung_aca', 'lung_n', 'lung_scc', 'non-lung']
         prediction = model.predict(img_array)
+        print("Prediction", prediction)
+
         predicted_index = np.argmax(prediction)
         predicted_class = classes[predicted_index]
         accuracy = round(prediction[0][predicted_index] * 100, 2)
 
-        # Construct the response message based on the prediction
-        if predicted_class == classes[1]:  # 'lung_n'
-            return {
-                "prediction": predicted_class,
-                "message": f"The image shows normal lung tissue with accuracy of {accuracy}%."
-            }
-        elif predicted_class == classes[0]:
-            return {
-                "prediction": predicted_class,
-                "message": f"The image shows signs of lung adenocarcinoma (lung_aca) with accuracy of {accuracy}%. Further examination is recommended."
-            }
-        elif predicted_class == classes[2]:
-            return {
-                "prediction": predicted_class,
-                "message": f"The image shows signs of lung squamous cell carcinoma (lung_scc) with accuracy of {accuracy}%. Further examination is recommended."
-            }
-        else:
-            return {
-                "prediction": predicted_class,
-                "message": "Unrecognized result. Please consult a specialist."
-            }
+        if predicted_class == 'lung_n':
+            return {"prediction": predicted_class, "message": f"Normal lung tissue detected with {accuracy}% accuracy."}
+        if predicted_class == 'non-lung':
+            raise ValueError(f"Non-lung image detected. Please upload a valid lung tissue image.")
+        return {"prediction": predicted_class, "message": f"{predicted_class} detected with {accuracy}% accuracy."}
 
 class GetAllClassifiedImages(ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -173,14 +159,7 @@ class GetAllClassifiedImages(ListAPIView):
     serializer_class = ImageClassifierSerializer
 
     def get_queryset(self):
-        return super().get_queryset().filter(user=self.request.user)
-
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        return Response({
-            'message': 'Classified Images fetched successfully',
-            'data': response.data
-        })
+        return self.queryset.filter(user=self.request.user)
 
 class DeleteClassifiedImageView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
@@ -188,23 +167,9 @@ class DeleteClassifiedImageView(DestroyAPIView):
     def get_queryset(self):
         return Image.objects.filter(id=self.kwargs['pk'])
 
-    def delete(self, request, *args, **kwargs):
-        response = super().delete(request, *args, **kwargs)
-        return Response({
-            'message': 'Image has been deleted successfully',
-            'data': response.data
-        })
-
 class GetClassifiedImageDetail(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ImageClassifierSerializer
 
     def get_queryset(self):
         return Image.objects.filter(id=self.kwargs['pk'])
-
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        return Response({
-            'message': 'Image Details have been fetched successfully',
-            'data': response.data
-        })

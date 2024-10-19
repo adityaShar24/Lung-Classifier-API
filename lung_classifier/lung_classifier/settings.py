@@ -21,11 +21,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Define the path to your data folder
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 
-MODEL_PATH = os.path.join(BASE_DIR , 'classifier' , 'ml' , 'lung_classifier_model.h5')
+MODEL_PATH = os.path.join(BASE_DIR , 'classifier' , 'ml' , 'new_lung_classifier_model.h5')
 
 LUNG_N_DIR = os.path.join(DATA_DIR, 'lung_n')
 LUNG_ACA_DIR = os.path.join(DATA_DIR, 'lung_aca')
 LUNG_SCC_DIR = os.path.join(DATA_DIR, 'lung_scc')
+NON_LUNG_DIR = os.path.join(DATA_DIR, 'non-lung')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

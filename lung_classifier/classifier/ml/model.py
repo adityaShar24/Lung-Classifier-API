@@ -22,7 +22,7 @@ def build_model():
     x = layers.Dense(128, activation='relu')(x)
     x = layers.Dropout(0.3)(x)
     x = layers.BatchNormalization()(x)
-    output = layers.Dense(3, activation='softmax')(x)
+    output = layers.Dense(4, activation='softmax')(x)
 
     model = Model(pre_trained_model.input, output)
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
